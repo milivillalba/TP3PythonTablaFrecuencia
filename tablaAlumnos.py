@@ -14,18 +14,8 @@ def analisis_estadistico(data_frame):
         data_frame['pi%']= data_frame["ri"] * 100 #Calculo el porcentaje de la frecuencia relativa'pi%' multiplicando 'ri' por 100.
         data_frame['Pi%']= data_frame['Ri'] * 100 #Calculo el porcentaje de la frecuencia relativa acumulada'Pi%' multiplicando 'Ri' por 100.
 
-        #devolver un dicionario con las estadisticas calculadas
-        estadistica={
-            'fi': data_frame["fi"].tolist(),
-            'Fi': data_frame["Fi"].tolist(),
-            'ri': data_frame["ri"].tolist(),
-            'Ri': data_frame["Ri"].tolist(),
-            'pi': data_frame["pi%"].tolist(),
-            'Pi': data_frame["Pi%"].tolist()
-
-        }
+        print(data_frame)
         
-        print(estadistica)
     except ValueError:
         #Si hay un error al obtener los datos del archivo se muestra este mensaje.
         print("Error en obtener los datos de la listalista")
