@@ -1,26 +1,41 @@
 import pandas as pd
 
 #lee los datos quee stan en el archivo AlumnosTabla2.CSV
-#carga esos datos en un "DataFrama" llamado "dat_frame"el cual es una extrutura que hace que se vea como una hoja de calculos
-data_frame= pd.read_csv("AlumnosTabla2.csv", delimiter=";")
 
-#creo una funcion que toma como entrada los datos(edades y fi) de un archivo "CSV" para relizar los calculos de de la tabla de frecuencia.
-def analisis_estadistico(data_frame):
-    try:
+#creo una funcion que toma como entrada los una lista de edades.
+def analisis_estadistico(data):
+   
+        #creo un data_frame a partir de valores
+        data_Serie= pd.Series(data) # '.series' es una extrutura de datos unidimencional que contiene datos etiquetados
         
-        data_frame["Fi"]= data_frame['fi'].cumsum()#Calculo la frecuencia acumulada'FI',sumando la columna'fi'con"cumsun"
-        data_frame["ri"]= data_frame["fi"] / data_frame["fi"].sum()#Calculo la frecuencia relativa'ri' dividiento 'fi' con la suma total de 'fi' que seria la cantidad de alumnos.
-        data_frame["Ri"]= data_frame['ri'].cumsum()#Calculo la frecuencia relativa acumulada 'Ri' , acumulando la columna'ri'.
-        data_frame['pi%']= data_frame["ri"] * 100 #Calculo el porcentaje de la frecuencia relativa'pi%' multiplicando 'ri' por 100.
-        data_frame['Pi%']= data_frame['Ri'] * 100 #Calculo el porcentaje de la frecuencia relativa acumulada'Pi%' multiplicando 'Ri' por 100.
+        fi= data_Serie.value_counts().sort_index() #cuento la frecuencia de cada valor unico en la lista y devuelve una nueva serie donde los indices son valores unicos.
+        Fi= fi.cumsum()#Calculo la frecuencia acumulada'FI',sumando la columna'fi'con"cumsun"
+        ri= fi / fi.sum()#Calculo la frecuencia relativa'ri' dividiento 'fi' con la suma total de 'fi' que seria la cantidad de alumnos.
+        Ri= ri.cumsum()#Calculo la frecuencia relativa acumulada 'Ri' , acumulando la columna'ri'.
+        pi= ri* 100 #Calculo el porcentaje de la frecuencia relativa'pi%' multiplicando 'ri' por 100.
+        Pi= Ri * 100 #Calculo el porcentaje de la frecuencia relativa acumulada'Pi%' multiplicando 'Ri' por 100.
 
-        print(data_frame)
+       #creo una dataFrama para acomodar y mostra los datos d ela tabla de frecuencia
+        tablaFrecuencia= pd.DataFrame({
+           'Edades': fi.index, #agrego una columna con las edades
+           'fi': fi,
+           'Fi': Fi,
+           'ri':ri,
+           'Ri': Ri,
+           'pi%': pi,
+           'Pi%': Pi
+         
+       })
+        return tablaFrecuencia
         
-    except ValueError:
-        #Si hay un error al obtener los datos del archivo se muestra este mensaje.
-        print("Error en obtener los datos de la listalista")
-        
+    
 
+# Lista de datos de prueba
+lista_Edades= [18, 19, 19, 20, 20, 20, 20, 21, 21, 21, 21, 21, 21, 21, 22, 22, 22, 25, 25, 28, 28, 29, 30, 30, 35, 38]
 
-analisis_estadistico(data_frame)
-data_frame.to_clipboard(index=False, decimal=',')
+# Llamar a la función para analizar los datos y mostrar la tabla de frecuencia
+resultado_tabla = analisis_estadistico(lista_Edades)
+print(resultado_tabla)
+
+#Convertir con archivo 'CSV'
+resultado_tabla.to_csv('TablaEdades.csv', index=False)
